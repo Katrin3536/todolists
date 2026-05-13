@@ -3,9 +3,5 @@ type ButtonProps = {
 }
 
 export const Button = ({title}:ButtonProps) => {
-  return (
-      <div>
-          <button>{title}</button>
-      </div>
-  )
+  return <button>{title}</button>
 }
