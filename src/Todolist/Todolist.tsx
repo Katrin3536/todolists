@@ -1,6 +1,7 @@
-import {Button} from "../Button.tsx";
+import {Button} from '../Button.tsx';
+import {FilterValues} from '../App.tsx';
 
-export type TaskProps={
+export type TaskProps = {
     id: number,
     title: string,
     isDone: boolean,
@@ -9,29 +10,38 @@ export type TaskProps={
 type Props = {
     title: string,
     tasks: TaskProps[],
+    deleteTask: (taskId: number) => void,
+    changeFilter:(filter:FilterValues)=>void
 }
 
 
-export const Todolist=({title,tasks}:Props)=>{
+export const Todolist = ({title, tasks, deleteTask,changeFilter}: Props) => {
 
+    const mappedTasks = tasks.length === 0 ? (<p>" No tasks"</p>) :
+        (<ul>{tasks.map((t) => {
+                return (<li key={t.id}>
+                    <input type="checkbox" checked={t.isDone}/>
+                    <span>{t.title}</span>
+                    <Button title={'x'} onClick={() => {deleteTask(t.id)}}/>
+                        </li>)
+                    })}
+        </ul>
+        );
 
     return (
         <div>
             <h3>{title}</h3>
             <div>
-                <Button title={"+"}/>
+                <Button title={'+'}/>
             </div>
-            {tasks.length === 0 ? (<p>" No tasks"</p>) :
-                (<ul>{tasks.map((t)=>{
-                return <li key={t.id}><input type="checkbox" checked={t.isDone}/> <span>{t.title}</span></li>
-            })}
-            </ul>)}
+            {mappedTasks}
             <div>
-                <Button title="All"/>
-                <Button title="Active"/>
-                <Button title="Completed"/>
+                <Button title="All" onClick={()=>changeFilter('All')}/>
+                <Button title="Active" onClick={()=>changeFilter('Active')}/>
+                <Button title="Completed" onClick={()=>changeFilter('Completed')}/>
             </div>
-        </div>
-    )
 
-}
+        </div>
+    );
+
+};
