@@ -47,10 +47,12 @@ export const Todolist = ({title, tasks, deleteTask, changeFilter, createTask}: P
     };
 
     const createTaskOnEnterHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && isTitleValid) {
             createTaskHandler();
         }
     };
+
+    const isTitleValid = taskTitle.length>0 && taskTitle.length <10
 
     return (
         <div>
@@ -62,8 +64,11 @@ export const Todolist = ({title, tasks, deleteTask, changeFilter, createTask}: P
                 {/*        inputRef.current.value = ""*/}
                 {/*    }}}/>*/}
                 {/*<input ref={inputRef}/>*/}
-                <Button title={'+'} onClick={createTaskHandler}/>
+                <Button title={'+'} onClick={createTaskHandler} disabled={!isTitleValid}/>
                 <input value={taskTitle} onChange={changeTaskTitleHandler} onKeyDown={createTaskOnEnterHandler}/>
+                {taskTitle.length === 0 && <div>Enter task title</div>}
+                {isTitleValid &&  <div> Min title length 1 characters</div>}
+                {taskTitle.length > 10 && <div style={{color:"red"}}>Max title length 10 characters</div>}
             </div>
             {mappedTasks}
             <div>
