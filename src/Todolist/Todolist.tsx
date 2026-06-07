@@ -1,50 +1,48 @@
 import {Button} from '../Button.tsx';
-import {FilterValues} from '../App.tsx';
+import {FilterValues, TodolistType} from '../App.tsx';
 import {ChangeEvent, KeyboardEvent, useState} from 'react';
 
-export type TaskProps = {
+export type Task = {
     id: string,
     title: string,
     isDone: boolean,
 }
 
 type Props = {
-    title: string,
-    tasks: TaskProps[],
-    deleteTask: (taskId: TaskProps['id']) => void,
-    changeFilter: (filter: FilterValues) => void,
-    createTask: (title: string) => void,
-    changeTaskStatus: (taskId: TaskProps['id'], status: TaskProps['isDone']) => void,
-    filter: FilterValues,
+    tasks: Task[],
+    deleteTask: (todolistId: string, taskId: Task['id']) => void,
+    changeFilter: (todolistId: string, filter: FilterValues) => void,
+    createTask: (todolistId: string, title: string) => void,
+    changeTaskStatus: (todolistId: string, taskId: Task['id'], status: Task['isDone']) => void,
+    todolist: TodolistType
+    deleteTodolist: (todolistId: string) => void,
 }
 
 
 export const Todolist = (
     {
-        title,
+        todolist: {id, title, filter},
         tasks,
         deleteTask,
         changeFilter,
         createTask,
         changeTaskStatus,
-        filter
+        deleteTodolist
     }: Props) => {
 
     const [taskTitle, setTaskTitle] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
 
-
     const mappedTasks = tasks.length === 0 ? (<p>" No tasks"</p>) :
         (<ul>{tasks.map((t) => {
                 const deleteTaskHandler = () => {
-                    deleteTask(t.id);
+                    deleteTask(id, t.id);
                 };
                 const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                    const newStatusValue = e.currentTarget.checked;
-                    changeTaskStatus(t.id, newStatusValue);
+                    changeTaskStatus(id, t.id, e.currentTarget.checked);
 
                 };
-                return (<li key={t.id} className={t.isDone ? 'is-done' : ''}>
+                return (<li key={t.id} className={t.isDone ? 'is-done' : 'task'}>
                     <input type="checkbox" checked={t.isDone} onChange={changeTaskStatusHandler}/>
                     <span>{t.title}</span>
                     <Button title={'x'} onClick={deleteTaskHandler}/>
@@ -58,7 +56,7 @@ export const Todolist = (
     const createTaskHandler = () => {
         const trimmedTitle = taskTitle.trim();
         if (trimmedTitle != '') {
-            createTask(trimmedTitle);
+            createTask(id, trimmedTitle);
             setTaskTitle('');
         } else {
             setError('Title is required');
@@ -79,9 +77,16 @@ export const Todolist = (
 
     // const isTitleValid = taskTitle.length>0 && taskTitle.length <10
 
+    const deleteTodolistHandler=()=>{
+        deleteTodolist(id);
+    }
+
     return (
         <div>
-            <h3>{title}</h3>
+            <div className={'container'}>
+                <h3>{title}</h3>
+                <Button title={'+'} onClick={deleteTodolistHandler}/>
+            </div>
             <div>
                 {/*<Button title={'+'} onClick={()=>{*/}
                 {/*    if(inputRef.current){*/}
@@ -96,15 +101,18 @@ export const Todolist = (
                 {/*<Button title={'+'} onClick={createTaskHandler} disabled={!isTitleValid}/>*/}
                 <Button title={'+'} onClick={createTaskHandler}/>
                 {error && <div className={'error-message'}>{error}</div>}
-                {/*{taskTitle.length === 0 && <div>Enter task title</div>}*/}
-                {/*{isTitleValid &&  <div> Min title length 1 characters</div>}*/}
-                {/*{taskTitle.length > 10 && <div style={{color:"red"}}>Max title length 10 characters</div>}*/}
+                {/*{!error && taskTitle.length === 0 && <div>Enter task title</div>}*/}
+                {/*{!error && isTitleValid &&  <div> Min title length 1 characters</div>}*/}
+                {/*{!error && taskTitle.length > 10 && <div style={{color:"red"}}>Max title length 10 characters</div>}*/}
             </div>
             {mappedTasks}
             <div>
-                <Button className={filter === 'All'?'active-filter':""} title="All" onClick={() => changeFilter('All')}/>
-                <Button className={filter === 'Active'?'active-filter':""} title="Active" onClick={() => changeFilter('Active')}/>
-                <Button className={filter === 'Completed'?'active-filter':""} title="Completed" onClick={() => changeFilter('Completed')}/>
+                <Button className={filter === 'All' ? 'active-filter' : ''} title="All"
+                        onClick={() => changeFilter(id, 'All')}/>
+                <Button className={filter === 'Active' ? 'active-filter' : ''} title="Active"
+                        onClick={() => changeFilter(id, 'Active')}/>
+                <Button className={filter === 'Completed' ? 'active-filter' : ''} title="Completed"
+                        onClick={() => changeFilter(id, 'Completed')}/>
             </div>
 
         </div>

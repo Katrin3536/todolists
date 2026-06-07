@@ -1,7 +1,8 @@
-import {TaskProps} from './Todolist/Todolist.tsx';
-import {FilterValues} from './App.tsx';
 
-export const getFilteredTasks = (tasks:TaskProps[], filter:FilterValues):TaskProps[] => {
+import {FilterValues} from './App.tsx';
+import {Task} from './Todolist/Todolist.tsx';
+
+export const getFilteredTasks = ( tasks:Task[], filter:FilterValues):Task[]=> {
     switch (filter) {
         case 'Active':
             return tasks.filter(task => !task.isDone)

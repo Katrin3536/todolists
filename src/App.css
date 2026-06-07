@@ -19,6 +19,21 @@
   background-color: lightgreen;
 }
 
+/*!*.filter__btn-active {*! БЭМ методология */
+/*  background-color: lightgreen;*/
+/*}*/
+
 .is-done {
   opacity: 0.5;
+  text-decoration: line-through;
+  /*font-style: italic;*/
+}
+
+.task {
+  font-weight: bold;
+}
+
+.container {
+  display: flex;
+  align-items: center;
 }
