@@ -37,8 +37,9 @@ export const App = () => {
         ],
     });
 
-    const deleteTask = (todolistId: string, taskId: Task['id']) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(t => t.id !== taskId)});
+    const deleteTask = (payload:{todolistId: string, taskId: Task['id']}) => {
+        const { todolistId, taskId} = payload;
+        setTasks((prevState:Tasks)=>({...prevState, [todolistId]: prevState[todolistId].filter(t => t.id !== taskId)}));
     };
 
 
@@ -52,36 +53,33 @@ export const App = () => {
     // }
 
 
-    const changeFilter = (todolistId: string, filter: FilterValues) => {
-        const newTodolists = todolists.map(tl => tl.id === todolistId ? {...tl, filter: filter} : tl);
+    const changeFilter = (payload:{todolistId: string, filter: FilterValues}) => {
+        const {todolistId, filter} = payload;
+        const newTodolists =(prevState:TodolistType[])=> prevState.map(tl => tl.id === todolistId ? {...tl, filter: filter} : tl);
         setTodolists(newTodolists);
     };
 
-    const createTask = (todolistId: string, title: string) => {
+    const createTask = (payload:{todolistId: string, title: string}) => {
+        const { todolistId, title } = payload;
         const newTask: Task = {
             id: v1(),
             title: title,
             isDone: false
         };
-        const newTasks = {...tasks, [todolistId]: [newTask, ...tasks[todolistId]]};
+        const newTasks = (prevState:Tasks)=>({...prevState, [todolistId]: [newTask, ...prevState[todolistId]]});
         setTasks(newTasks);
     };
 
-    const changeTaskStatus = (todolistId: string, taskId: Task['id'], status: Task['isDone']) => {
-        // const task = tasks.find(task => task.id === taskId);
-        // if (task) {
-        //     task.isDone = status;
-        //     setTasks([...tasks]);
-        // }
-        // const newState = tasks.map(task => task.id === taskId ? {...task, isDone: status} : task);
-        setTasks({
-            ...tasks,
-            [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, isDone: status} : task)
-        });
+    const changeTaskStatus = (payload:{todolistId: string, taskId: Task['id'], status: Task['isDone']}) => {
+        const { todolistId, taskId,status } = payload;
+        setTasks((prevState:Tasks)=>({
+            ...prevState,
+            [todolistId]: prevState[todolistId].map(task => task.id === taskId ? {...task, isDone: status} : task)
+        }));
     };
 
     const deleteTodolist = (todolistId: string) => {
-        setTodolists(todolists.filter(tl => tl.id !== todolistId));
+        setTodolists((prevState:TodolistType[] )=>prevState.filter(tl => tl.id !== todolistId));
         delete tasks[todolistId];
         setTasks({...tasks});
     };
@@ -92,13 +90,15 @@ export const App = () => {
         setTasks({...tasks, [newTodolist.id]: []});
     };
 
-    const changeTaskTitle = (todolistId: string, taskId: Task['id'], title: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title} : task)});
+    const changeTaskTitle = (payload:{todolistId: string, taskId: Task['id'], title: string}) => {
+        const { todolistId, taskId,title } = payload;
+        setTasks((prevState:Tasks)=>({...prevState, [todolistId]: prevState[todolistId].map(task => task.id === taskId ? {...task, title} : task)}));
     };
 
 
-    const changeTodolistTitle = (todolistId: string, title: string) => {
-        setTodolists(todolists.map(tl=>tl.id === todolistId?{...tl, title}:tl));
+    const changeTodolistTitle = (payload:{todolistId: string, title: string}) => {
+        const { todolistId, title } = payload;
+        setTodolists((prevState:TodolistType[])=>prevState.map(tl=>tl.id === todolistId?{...tl, title}:tl));
     };
 
     return (
