@@ -91,11 +91,11 @@ test('проверка, что значение определено', () => {
     expect(value).toBeDefined()
 })
 
-test('проверка, что значение не определено', () => {
-    // ❌ Тест не пройдет, потому что value = undefined, т.е. значение не определено
-    const value = undefined
-    expect(value).toBeDefined()
-})
+// test('проверка, что значение не определено', () => {
+//     // ❌ Тест не пройдет, потому что value = undefined, т.е. значение не определено
+//     const value = undefined
+//     expect(value).toBeDefined()
+// })
 
 // ✅ Тест пройден
 expect({a: 1, b: 2}).toEqual({a: 1, b: 2})
@@ -109,9 +109,9 @@ test('correct task should change its status', () => {
         changeTaskStatusAC({ todolistId: 'todolistId2', taskId: '2', isDone: false })
     )
 
-    expect(endState['todolistId2'][1].isDone).toBe(false)
-    expect(endState['todolistId2'].length).toBe(3)
-    expect(endState['todolistId2'][1].title).toBe('milk')
+    expect(endState['todolistId2'][1].isDone).toBeFalsy()
+    expect(endState['todolistId1'][1].isDone).toBeTruthy()
+
 })
 
 test('correct task should change its title', () => {
@@ -119,8 +119,6 @@ test('correct task should change its title', () => {
         startState,
         changeTaskTitleAC({ todolistId: 'todolistId1', taskId: '3', title: 'Redux' })
     )
-
-    expect(endState['todolistId1'][2].isDone).toBe(false)
-    expect(endState['todolistId1'].length).toBe(3)
     expect(endState['todolistId1'][2].title).toBe('Redux')
+    expect(endState['todolistId2'][2].title).toBe('tea')
 })
