@@ -1,4 +1,4 @@
-import {FilterValues, TodolistType} from '../App.tsx';
+import {FilterValues, TodolistType} from '../app/App.tsx';
 import {ChangeEvent} from 'react';
 import {CreateItemForm} from '../CreateItemForm.tsx';
 import {EditableSpan} from '../EditableSpan.tsx';

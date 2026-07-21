@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from 'vitest'
-import type { Tasks } from '../App'
+import type { Tasks } from '../app/App'
 import {changeTaskStatusAC, changeTaskTitleAC, createTaskAC, deleteTaskAC, tasksReducer} from './tasks-reducer.ts';
 import {createTodolistAC, deleteTodolistAC} from './todolists-reducer.ts';
 
@@ -21,7 +21,7 @@ beforeEach(() => {
 })
 
 test('array should be created for new todolist', () => {
-    const endState = tasksReducer(startState, createTodolistAC('New todolist'))
+    const endState = tasksReducer(startState, createTodolistAC('New todolist'));
 
     const keys = Object.keys(endState)
     const newKey = keys.find(k => k !== 'todolistId1' && k !== 'todolistId2')
@@ -34,7 +34,7 @@ test('array should be created for new todolist', () => {
 })
 
 test('property with todolistId should be deleted', () => {
-    const endState = tasksReducer(startState, deleteTodolistAC('todolistId2'))
+    const endState = tasksReducer(startState, deleteTodolistAC({id:'todolistId2'}))
 
     const keys = Object.keys(endState)
 
