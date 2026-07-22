@@ -6,15 +6,15 @@ const initialState: TodolistType[] = [];
 
 // type Actions = DeleteTodolistAction | CreateTodolistAction | ChangeTodolistTitleAction | changeTodolistFilterAction
 
-export const deleteTodolistAC =createAction<{ id: string }> ('todolists/delete-todolist')
-export const createTodolistAC =createAction('todolists/create_todolist', (title:string)=>{
+export const deleteTodolistAC =createAction<{ id: string }> ('todolists/deleteTodolist')
+export const createTodolistAC =createAction('todolists/createTodolist', (title:string)=>{
     return {payload: {
             title:title,
             id: nanoid()
         }
     }})
-export const changeTodolistTitleAC =createAction<{id:string, title:string}>('todolists/change_todolist_title')
-export const changeTodolistFilterAC =createAction<{id:string, filter:FilterValues}>('todolists/change_todolist_filter')
+export const changeTodolistTitleAC =createAction<{id:string, title:string}>('todolists/changeTodolistTitle')
+export const changeTodolistFilterAC =createAction<{id:string, filter:FilterValues}>('todolists/changeTodolistFilter')
 
 export const todolistsReducer = createReducer(initialState, builder=> {
     builder
