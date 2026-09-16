@@ -1,6 +1,6 @@
 import { CreateItemForm } from "@/common/components"
 import { useAppDispatch } from "@/common/hooks"
-import { createTodolistAC } from "@/features/todolists/model/todolists-reducer"
+import { createTodolistTC } from "@/features/todolists/model/todolists-slice"
 import { Todolists } from "@/features/todolists/ui/Todolists/Todolists"
 import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
@@ -10,8 +10,7 @@ export const Main = () => {
 
   const createTodolist = (title: string) => {
     // const newTodolist: TodolistType = {id: v1(), title, filter: 'All'};
-    const action = createTodolistAC(title)
-    dispatch(action)
+    dispatch(createTodolistTC(title))
     // setTasks({...tasks, [action.payload.id]: []})
     // setTodolists([newTodolist, ...todolists]);
     // setTasks({...tasks, [newTodolist.id]: []});

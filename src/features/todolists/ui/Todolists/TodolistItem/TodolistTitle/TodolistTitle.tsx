@@ -3,30 +3,30 @@ import { useAppDispatch } from "@/common/hooks"
 import IconButton from "@mui/material/IconButton"
 import DeleteIcon from "@mui/icons-material/Delete"
 import styles from "./TodolistTitle.module.css"
-import { changeTodolistTitleAC, deleteTodolistAC, TodolistType } from "@/features/todolists/model/todolists-reducer.ts"
+import { changeTodolistTitleTC, deleteTodolistTC, type TodolistDomain } from "../../../../model/todolists-slice.ts"
 
 type Props = {
-  todolist: TodolistType
+  todolist: TodolistDomain
 }
 
 export const TodolistTitle = ({ todolist }: Props) => {
-  const { id, title } = todolist
+  const { id, title, entityStatus } = todolist
   const dispatch = useAppDispatch()
 
   const deleteTodolist = () => {
-    dispatch(deleteTodolistAC({ id }))
+    dispatch(deleteTodolistTC(id))
   }
 
   const changeTodolistTitle = (title: string) => {
-    dispatch(changeTodolistTitleAC({ id, title }))
+    dispatch(changeTodolistTitleTC({ id, title }))
   }
 
   return (
     <div className={styles.container}>
       <h3>
-        <EditableSpan value={title} onChange={changeTodolistTitle} />
+        <EditableSpan value={title} onChange={changeTodolistTitle} disabled={entityStatus === "loading"} />
       </h3>
-      <IconButton onClick={deleteTodolist}>
+      <IconButton onClick={deleteTodolist} disabled={entityStatus === "loading"}>
         <DeleteIcon />
       </IconButton>
     </div>

@@ -1,6 +1,5 @@
-import { selectThemeMode } from "@/app/app-selectors.ts"
-import { changeThemeModeAC } from "@/app/app-reducer.ts"
-import { NavButton } from "@/common/components/NavButton/NavButton"
+import { changeThemeModeAC, selectThemeMode, selectStatus } from "@/app/app-slice"
+import { NavButton } from "@/common/components"
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { containerSx } from "@/common/styles"
 import { getTheme } from "@/common/theme"
@@ -10,9 +9,11 @@ import Container from "@mui/material/Container"
 import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
 import Switch from "@mui/material/Switch"
+import LinearProgress from "@mui/material/LinearProgress"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
+  const status = useAppSelector(selectStatus)
 
   const dispatch = useAppDispatch()
 
@@ -37,6 +38,7 @@ export const Header = () => {
           </div>
         </Container>
       </Toolbar>
+      {status === "loading" && <LinearProgress />}
     </AppBar>
   )
 }
