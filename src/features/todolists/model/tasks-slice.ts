@@ -1,5 +1,6 @@
 import { setAppStatusAC } from "@/app/app-slice"
 import type { RootState } from "@/app/store"
+import { clearDataAC } from "@/common/actions"
 import { ResultCode } from "@/common/enums"
 import { defaultResponseSchema } from "@/common/types"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
@@ -198,6 +199,9 @@ export const tasksSlice = createAppSlice({
       })
       .addCase(deleteTodolistTC.fulfilled, (state, action) => {
         delete state[action.payload.id]
+      })
+      .addCase(clearDataAC, () => {
+        return {}
       })
   },
 })

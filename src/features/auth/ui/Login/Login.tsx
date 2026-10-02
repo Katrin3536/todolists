@@ -1,28 +1,30 @@
 import { selectThemeMode } from "@/app/app-slice"
-import { useAppSelector } from "@/common/hooks"
+import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { getTheme } from "@/common/theme"
+import { loginTC } from "@/features/auth/model/auth-slice"
 import type { LoginInputs } from "@/features/auth/model/login.types"
 import { loginSchema } from "@/features/auth/model/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Grid } from "@mui/material"
 import Button from "@mui/material/Button"
 import Checkbox from "@mui/material/Checkbox"
 import FormControl from "@mui/material/FormControl"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import FormGroup from "@mui/material/FormGroup"
 import FormLabel from "@mui/material/FormLabel"
-import { Grid } from "@mui/material"
 import TextField from "@mui/material/TextField"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 
 export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
+  const dispatch = useAppDispatch()
 
   const {
     // register,
     handleSubmit,
     reset,
     control,
-    // formState: { errors },
+    formState: { errors },
   } = useForm<LoginInputs>({
     defaultValues: { email: "", password: "", rememberMe: false },
     resolver: zodResolver(loginSchema),
@@ -31,7 +33,7 @@ export const Login = () => {
   const theme = getTheme(themeMode)
 
   const fetchFormData: SubmitHandler<LoginInputs> = (data) => {
-    console.log(data)
+    dispatch(loginTC(data))
     reset()
   }
 
@@ -70,14 +72,29 @@ export const Login = () => {
             <Controller
               name="email"
               control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField {...field} label="Email" margin="normal" error={!!error} helperText={error?.message} />
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Email"
+                  margin="normal"
+                  error={!!errors.email}
+                  helperText={!!errors && errors.email?.message}
+                />
               )}
             />
             <Controller
               name="password"
               control={control}
-              render={({ field }) => <TextField {...field} type="password" label="Password" margin="normal" />}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="password"
+                  label="Password"
+                  margin="normal"
+                  error={!!errors.password}
+                  helperText={!!errors && errors.password?.message}
+                />
+              )}
             />
             {/*<TextField type="password" label="Password" margin="normal" {...register("password")} />*/}
             <FormControlLabel
@@ -86,9 +103,7 @@ export const Login = () => {
                 <Controller
                   name="rememberMe"
                   control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <Checkbox onChange={(e) => onChange(e.target.checked)} checked={value} />
-                  )}
+                  render={({ field }) => <Checkbox {...field} checked={field.value} />}
                 />
               }
             />

@@ -16,3 +16,9 @@
   opacity: 0.5;
   text-decoration: line-through;
 }
+.circularProgressContainer {
+  position: fixed;
+  top: 30%;
+  text-align: center;
+  width: 100%;
+}

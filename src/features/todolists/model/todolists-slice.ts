@@ -1,4 +1,5 @@
 import { setAppStatusAC } from "@/app/app-slice"
+import { clearDataAC } from "@/common/actions"
 import { ResultCode } from "@/common/enums"
 import { defaultResponseSchema, type RequestStatus } from "@/common/types"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
@@ -22,6 +23,11 @@ export const todolistsSlice = createAppSlice({
   selectors: {
     // selectTodolists = (state: RootState): TodolistType[] => state.todolists
     selectTodolists: (state) => state,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearDataAC, () => {
+      return []
+    })
   },
   reducers: (create) => ({
     changeTodolistFilterAC: create.reducer<{ id: string; filter: FilterValues }>((state, action) => {
@@ -70,7 +76,7 @@ export const todolistsSlice = createAppSlice({
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await todolistsApi.changeTodolistTitle(args)
 
-          defaultResponseSchema.parse(res.data)//zod
+          defaultResponseSchema.parse(res.data) //zod
 
           if (res.data.resultCode === ResultCode.Success) {
             dispatch(setAppStatusAC({ status: "succeeded" }))
@@ -100,7 +106,7 @@ export const todolistsSlice = createAppSlice({
           dispatch(changeTodolistEntityStatusAC({ id, entityStatus: "loading" }))
           const res = await todolistsApi.deleteTodolist(id)
 
-          defaultResponseSchema.parse(res.data)//zod
+          defaultResponseSchema.parse(res.data) //zod
 
           if (res.data.resultCode === ResultCode.Success) {
             dispatch(setAppStatusAC({ status: "succeeded" }))
