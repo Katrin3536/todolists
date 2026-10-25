@@ -1,5 +1,7 @@
 import type { GlobalError, RequestStatus } from "@/common/types"
-import { createSlice } from "@reduxjs/toolkit"
+import { tasksApi } from "@/features/todolists/api/tasksApi"
+import { todolistsApi } from "@/features/todolists/api/todolistsApi"
+import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit"
 
 export const appSlice = createSlice({
   name: "app",
@@ -7,14 +9,37 @@ export const appSlice = createSlice({
     themeMode: "light" as ThemeMode,
     status: "idle" as RequestStatus,
     error: null as GlobalError,
+    isLoggedIn: false,
   },
   selectors: {
     // selectThemeMode = (state: RootState): ThemeMode => state.app.themeMode
     selectThemeMode: (state) => state.themeMode,
+    selectIsLoggedIn: (state) => state.isLoggedIn,
     selectStatus: (state) => state.status,
     selectError: (state) => state.error,
   },
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(isPending, (state, action) => {
+        if (
+          todolistsApi.endpoints.getTodolists.matchPending(action) ||
+          tasksApi.endpoints.getTasks.matchPending(action)
+        ) {
+          return
+        }
+        state.status = "loading"
+      })
+      .addMatcher(isFulfilled, (state) => {
+        state.status = "succeeded"
+      })
+      .addMatcher(isRejected, (state) => {
+        state.status = "failed"
+      })
+  },
   reducers: (create) => ({
+    changeIsLogginInAC: create.reducer<{ isLoggedIn: boolean }>((state, action) => {
+      state.isLoggedIn = action.payload.isLoggedIn
+    }),
     changeThemeModeAC: create.reducer<{ themeMode: ThemeMode }>((state, action) => {
       state.themeMode = action.payload.themeMode
     }),
@@ -27,20 +52,8 @@ export const appSlice = createSlice({
   }),
 })
 
-export const { changeThemeModeAC, setAppStatusAC, setAppErrorAC } = appSlice.actions
-export const { selectThemeMode, selectStatus, selectError } = appSlice.selectors
+export const { changeThemeModeAC, setAppStatusAC, setAppErrorAC, changeIsLogginInAC } = appSlice.actions
+export const { selectThemeMode, selectStatus, selectError, selectIsLoggedIn } = appSlice.selectors
 export const appReducer = appSlice.reducer
-
-// const initialState = {
-//   themeMode: "light" as ThemeMode,
-// }
-
-// export const changeThemeModeAC = createAction<{ themeMode: ThemeMode }>("app/changeThemeMode")
-
-// export const appSlice = createReducer(initialState, (builder) => {
-//   builder.addCase(changeThemeModeAC, (state, action) => {
-//     state.themeMode = action.payload.themeMode
-//   })
-// })
 
 export type ThemeMode = "dark" | "light"

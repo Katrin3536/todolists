@@ -1,26 +1,27 @@
 import { CreateItemForm } from "@/common/components"
-import { useAppDispatch } from "@/common/hooks"
-import { TodolistTitle } from "./TodolistTitle/TodolistTitle.tsx"
-import { Tasks } from "./Tasks/Tasks.tsx"
+import { useCreateTaskMutation } from "@/features/todolists/api/tasksApi"
+import type { TodolistDomain } from "@/features/todolists/lib/types"
 import { FilterButtons } from "./FilterButtons/FilterButtons.tsx"
-import { type TodolistDomain } from "../../../model/todolists-slice.ts"
-import { createTaskTC } from "../../../model/tasks-slice.ts"
+import { Tasks } from "./Tasks/Tasks.tsx"
+import { TodolistTitle } from "./TodolistTitle/TodolistTitle.tsx"
 
 type Props = {
   todolist: TodolistDomain
 }
 
 export const TodolistItem = ({ todolist }: Props) => {
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
 
-  const createTask = (title: string) => {
-    dispatch(createTaskTC({ todolistId: todolist.id, title }))
+  const [createTask] = useCreateTaskMutation()
+
+  const createTaskHandler = (title: string) => {
+    createTask({ todolistId: todolist.id, title })
   }
   //<div inert={todolist.entityStatus === "loading"}>- если надо весь тодолист задизейблить
   return (
     <div>
       <TodolistTitle todolist={todolist} />
-      <CreateItemForm onCreateItem={createTask} disabled={todolist.entityStatus === "loading"} />
+      <CreateItemForm onCreateItem={createTaskHandler} disabled={todolist.entityStatus === "loading"} />
       <Tasks todolist={todolist} />
       <FilterButtons todolist={todolist} />
     </div>

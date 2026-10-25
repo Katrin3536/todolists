@@ -1,25 +1,19 @@
-import { authReducer, authSlice } from "@/features/auth/model/auth-slice"
+import { baseApi } from "@/app/baseApi"
 import { configureStore } from "@reduxjs/toolkit"
-import { tasksReducer, tasksSlice } from "@/features/todolists/model/tasks-slice"
-import { todolistsReducer, todolistsSlice } from "@/features/todolists/model/todolists-slice"
+import { setupListeners } from "@reduxjs/toolkit/query/react"
 import { appReducer, appSlice } from "./app-slice.ts"
-
-// объединение reducer'ов с помощью combineReducers
-// const rootReducer = combineReducers({
-//   tasks: tasksReducer,
-//   todolists: todolistsReducer,
-//   app: appReducer,
-// })
 
 // создание store
 export const store = configureStore({
   reducer: {
-    [tasksSlice.name]: tasksReducer,
-    [todolistsSlice.name]: todolistsReducer,
     [appSlice.name]: appReducer,
-    [authSlice.name]: authReducer,
+    [baseApi.reducerPath]: baseApi.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
+  devTools: process.env.NODE_ENV !== "production",
 })
+
+setupListeners(store.dispatch)
 
 // автоматическое определение типа всего объекта состояния
 export type RootState = ReturnType<typeof store.getState>
