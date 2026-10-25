@@ -2,7 +2,10 @@
   "name": "todolist",
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://Katrin3536.github.io/todolists",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "dev": "vite --port 3000",
     "build": "tsc -b && vite build",
     "test": "vitest",

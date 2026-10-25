@@ -4,7 +4,11 @@ import path from "path"
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/todolists/",
   plugins: [react()],
+  build: {
+    outDir: "build",
+  },
   resolve: {
     alias: {
       "@/": `${path.resolve(__dirname, "src")}/`,
